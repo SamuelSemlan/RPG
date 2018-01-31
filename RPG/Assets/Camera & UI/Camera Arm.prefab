@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 20056478344011440}
   - component: {fileID: 124667299964248530}
   - component: {fileID: 81461950614195906}
+  - component: {fileID: 114836038521660314}
+  - component: {fileID: 114502941988424352}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -40,7 +42,7 @@ GameObject:
   - component: {fileID: 114231396999866784}
   m_Layer: 0
   m_Name: Camera Arm
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,13 +67,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1186502268825350}
-  m_LocalRotation: {x: 0.1895163, y: -0.4755642, z: 0.105721824, w: 0.8524935}
-  m_LocalPosition: {x: 5.17, y: 3.79, z: -3.25}
+  m_LocalRotation: {x: 0.28403202, y: -0.4606873, z: 0.15844749, w: 0.82582533}
+  m_LocalPosition: {x: 6.67, y: 8.35, z: -5.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4261989157465448}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 25.067, y: -58.31, z: 0}
+  m_LocalEulerAnglesHint: {x: 37.96, y: -58.31, z: 0}
 --- !u!20 &20056478344011440
 Camera:
   m_ObjectHideFlags: 1
@@ -126,6 +128,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4eea756f6e3c8428665f03eee2360a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114502941988424352
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1186502268825350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b024290f9bf6194429404c6bb8061a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkCursor: {fileID: 2800000, guid: 3ff40650c49abee45939b87616d0e54f, type: 3}
+  attackCursor: {fileID: 2800000, guid: 58a24fd2ca8cc08458b7e37856383d2b, type: 3}
+  debugCursor: {fileID: 2800000, guid: 42d5041f07504d24bb71d0653e8480fc, type: 3}
+  cursorHotspot: {x: 96, y: 96}
+--- !u!114 &114836038521660314
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1186502268825350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3549d256b14c9942afabea71d4d822c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerPriorities: 0900000008000000
+  distanceToBackground: 100
 --- !u!124 &124667299964248530
 Behaviour:
   m_ObjectHideFlags: 1

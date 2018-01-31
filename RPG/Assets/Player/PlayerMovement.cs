@@ -5,6 +5,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 [RequireComponent(typeof (ThirdPersonCharacter))]
 public class PlayerMovement : MonoBehaviour
 {
+
+    [SerializeField] float walkMoveStopRadius = .2f;
+
     ThirdPersonCharacter m_Character;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster;
     Vector3 currentClickTarget;
@@ -15,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
         m_Character = GetComponent<ThirdPersonCharacter>();
         currentClickTarget = transform.position;
     }
+
+    //TODO fix issue with click to move and WASD conflicting and increasing speed
 
     // Fixed update is called in sync with physics
     private void FixedUpdate()
@@ -35,7 +40,15 @@ public class PlayerMovement : MonoBehaviour
                     return;
             }
         }
-        m_Character.Move(currentClickTarget - transform.position, false, false);
+        var playerToClickpoint = currentClickTarget - transform.position;
+        if(playerToClickpoint.magnitude >= walkMoveStopRadius)
+        {
+            m_Character.Move(currentClickTarget - transform.position, false, false);
+        }
+        else
+        {
+            m_Character.Move(Vector3.zero, false, false);
+        }
     }
 }
 
