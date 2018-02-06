@@ -7,18 +7,20 @@ public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] float walkMoveStopRadius = .2f;
+    [SerializeField] float attackMoveStopRadius = 5f;
 
-    ThirdPersonCharacter m_Character;   // A reference to the ThirdPersonCharacter on the object
+    ThirdPersonCharacter thirdPersonCharacter;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster;
-    Vector3 currentClickTarget;
+    Vector3 currentDestination, clickPoint;
 
-    bool isInDirectMode = false; //TODO make static later
+
+    bool isInDirectMode = false;
 
     private void Start()
     {
         cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
-        m_Character = GetComponent<ThirdPersonCharacter>();
-        currentClickTarget = transform.position;
+        thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
+        currentDestination = transform.position;
     }
     
 
@@ -28,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G)) // TODO add to menus
         {
             isInDirectMode = !isInDirectMode; // Toggle mode
+            currentDestination = transform.position; //Clear the click target
         }
 
         if (isInDirectMode)
@@ -45,38 +48,60 @@ public class PlayerMovement : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        // calculate camera relative direction to move:
-        Vector3 m_CamForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 m_Move = v * m_CamForward + h * Camera.main.transform.right;
-        m_Character.Move(m_Move, false, false);
+        // Calculate camera relative direction to move:
+        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 movement = v * cameraForward + h * Camera.main.transform.right;
+        thirdPersonCharacter.Move(movement, false, false);
     }
 
     private void ProcessMouseMovement()
     {
         if (Input.GetMouseButton(0))
         {
-            switch (cameraRaycaster.layerHit)
+            clickPoint = cameraRaycaster.hit.point;
+            switch (cameraRaycaster.currentLayerHit)
             {
                 case Layer.Walkable:
-                    currentClickTarget = cameraRaycaster.hit.point;
+                    currentDestination = ShortDestination(clickPoint, walkMoveStopRadius);
                     break;
                 case Layer.Enemy:
-                    print("Not moving to enemy");
+                    currentDestination = ShortDestination(clickPoint, attackMoveStopRadius);
                     break;
                 default:
                     print("Unexpected layer found");
                     return;
             }
         }
-        var playerToClickpoint = currentClickTarget - transform.position;
-        if (playerToClickpoint.magnitude >= walkMoveStopRadius)
+        WalkToDestination();
+    }
+
+    private void WalkToDestination()
+    {
+        var playerToClickpoint = currentDestination - transform.position;
+        if (playerToClickpoint.magnitude >= 0)
         {
-            m_Character.Move(currentClickTarget - transform.position, false, false);
+            thirdPersonCharacter.Move(currentDestination - transform.position, false, false);
         }
         else
         {
-            m_Character.Move(Vector3.zero, false, false);
+            thirdPersonCharacter.Move(Vector3.zero, false, false);
         }
+    }
+
+    Vector3 ShortDestination(Vector3 destination, float shortening)
+    {
+        Vector3 reductionVector = (destination - transform.position).normalized * shortening;
+        return destination - reductionVector;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, currentDestination);
+        Gizmos.DrawSphere(currentDestination, .1f);
+        Gizmos.DrawSphere(clickPoint, .15f);
+        
+//        Gizmos.DrawWireSphere(transform.position, attackMoveStopRadius);
     }
 }
 
